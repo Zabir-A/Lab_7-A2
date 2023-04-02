@@ -64,35 +64,35 @@ services:
   #     appnetwork:
   #       ipv4_address: 172.30.0.7
 
-  # mysql:
-  #   image: mysql:latest
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: root
-  #     MYSQL_DATABASE: events
-  #   volumes:
-  #     - mysql-data:/var/lib/mysql
-  #   ports:
-  #     - "3306:3306"
-  #   networks:
-  #     appnetwork:
-  #       ipv4_address: 172.30.0.4
-
   mysql:
-  # image: mysql:latest
-  build: 
-    context: ./mysql
-  image: mysql-image
-  container_name: mysql-container
-  environment:
-    MYSQL_ROOT_PASSWORD: root
-    MYSQL_DATABASE: events
-  volumes:
-    - mysql-data:/var/lib/mysql
-  ports:
-    - "3306:3306"
-  networks:
-    appnetwork:
-      ipv4_address: 172.30.0.4
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: events
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      appnetwork:
+        ipv4_address: 172.30.0.4
+
+  # mysql:
+  # # image: mysql:latest
+  # build: 
+  #   context: ./mysql
+  # image: mysql-image
+  # container_name: mysql-container
+  # environment:
+  #   MYSQL_ROOT_PASSWORD: root
+  #   MYSQL_DATABASE: events
+  # volumes:
+  #   - mysql-data:/var/lib/mysql
+  # ports:
+  #   - "3306:3306"
+  # networks:
+  #   appnetwork:
+  #     ipv4_address: 172.30.0.4
 
 
 networks:
