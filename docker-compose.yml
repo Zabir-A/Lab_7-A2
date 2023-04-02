@@ -29,7 +29,7 @@ services:
         ipv4_address: 172.30.0.5
 
   receiver:
-    build: ./Receiver
+    build: ./receiver
     ports:
       - "8080:8080"
     networks:
@@ -37,7 +37,7 @@ services:
         ipv4_address: 172.30.0.10
 
   storage:
-    build: ./Storage
+    build: ./storage
     ports:
       - "8090:8090"
     depends_on:
@@ -47,7 +47,7 @@ services:
         ipv4_address: 172.30.0.9
 
   processing:
-    build: ./Processing
+    build: ./processing
     ports:
       - "8100:8100"
     depends_on:
@@ -65,8 +65,6 @@ services:
   #       ipv4_address: 172.30.0.7
 
   mysql:
-    build:
-      context: ./mysql
     image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: root

@@ -122,7 +122,7 @@ def init_scheduler():
 app = connexion.FlaskApp(__name__, specification_dir="")
 app.add_api(
     "openapi.yml",
-    base_path="/processing",
+    base_path="/Processing",
     strict_validation=True,
     validate_responses=True,
 )
