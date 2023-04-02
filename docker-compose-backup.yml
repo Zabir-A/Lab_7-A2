@@ -29,7 +29,10 @@ services:
         ipv4_address: 172.30.0.5
 
   receiver:
-    build: ./Receiver
+    build: 
+      context: ./Receiver
+    image: receiver-image
+    container_name: receiver-container
     ports:
       - "8080:8080"
     networks:
@@ -37,7 +40,10 @@ services:
         ipv4_address: 172.30.0.10
 
   storage:
-    build: ./Storage
+    build:
+      context: ./Storage
+    image: storage-image
+    container_name: storage-container
     ports:
       - "8090:8090"
     depends_on:
@@ -47,7 +53,10 @@ services:
         ipv4_address: 172.30.0.9
 
   processing:
-    build: ./Processing
+    build: 
+      context: ./Processing
+    image: processing-image
+    container_name: processing-container
     ports:
       - "8100:8100"
     depends_on:
@@ -64,36 +73,22 @@ services:
   #     appnetwork:
   #       ipv4_address: 172.30.0.7
 
-  # mysql:
-  #   image: mysql:latest
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: root
-  #     MYSQL_DATABASE: events
-  #   volumes:
-  #     - mysql-data:/var/lib/mysql
-  #   ports:
-  #     - "3306:3306"
-  #   networks:
-  #     appnetwork:
-  #       ipv4_address: 172.30.0.4
-
   mysql:
-  # image: mysql:latest
-  build: 
-    context: ./mysql
-  image: mysql-image
-  container_name: mysql-container
-  environment:
-    MYSQL_ROOT_PASSWORD: root
-    MYSQL_DATABASE: events
-  volumes:
-    - mysql-data:/var/lib/mysql
-  ports:
-    - "3306:3306"
-  networks:
-    appnetwork:
-      ipv4_address: 172.30.0.4
-
+    # image: mysql:latest
+    build: 
+      context: ./mysql
+    image: mysql-image
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: events
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      appnetwork:
+        ipv4_address: 172.30.0.4
 
 networks:
   appnetwork:
