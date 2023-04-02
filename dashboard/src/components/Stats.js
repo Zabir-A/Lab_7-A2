@@ -5,7 +5,7 @@ const Stats = () => {
 
   useEffect(() => {
     // fetch('http://localhost:8100/stats')
-    fetch("http://34.130.75.254/processing/stats")
+    fetch("http://34.130.224.66/processing/stats")
       .then((res) => res.json())
       .then((res) => {
         setEvent(res);
