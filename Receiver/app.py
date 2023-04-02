@@ -19,11 +19,18 @@ def process_event(event, endpoint):
 
     # TODO: create KafkaClient object assigning hostname and port from app_config to named parameter "hosts"
     # and store it in a variable named 'client'
-    client = KafkaClient(hosts=f"{conf['events']['hostname']}:{conf['events']['port']}")
+    # hosts = KafkaClient(hosts=f"{conf['events']['hostname']}:{conf['events']['port']}")
+    hosts = (
+        receiver_app_config["events"]["hostname"]
+        + ":"
+        + str(receiver_app_config["events"]["port"])
+    )
+    client = KafkaClient(hosts=hosts)
 
     # TODO: index into the client.topics array using topic from app_config
     # and store it in a variable named topic
-    topic = client.topics[conf["events"]["topic"]]
+    # topic = client.topics[conf[["events"]["topic"]]]
+    topic = client.topics[receiver_app_config["events"]["topic"]]
 
     # TODO: call get_sync_producer() on your topic variable
     # and store the return value in variable named producer
@@ -66,13 +73,23 @@ def sell(body):
 
 
 app = connexion.FlaskApp(__name__, specification_dir="")
-app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
+app.add_api(
+    "openapi.yml",
+    base_path="/receiver",
+    strict_validation=True,
+    validate_responses=True,
+)
 
 # with open("app_conf.yml", "r") as f:
 # app_config = yaml.safe_load(f.read())
 
+with open("app_conf.yml", "r") as f:
+    app_config = yaml.safe_load(f.read())
+
+
 with open("receiver-app_conf.yml", "r") as f:
-    conf = yaml.safe_load(f.read())
+    receiver_app_config = yaml.safe_load(f.read())
+
 
 with open("log_conf.yml", "r") as f:
     log_config = yaml.safe_load(f.read())

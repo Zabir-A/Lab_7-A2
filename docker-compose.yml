@@ -7,6 +7,9 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - 22181:2181
+    networks:
+      appnetwork:
+        ipv4_address: 172.30.0.6
   
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -21,34 +24,69 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      appnetwork:
+        ipv4_address: 172.30.0.5
+
+  receiver:
+    build: ./Receiver
+    ports:
+      - "8080:8080"
+    networks:
+      appnetwork:
+        ipv4_address: 172.30.0.10
+
+  storage:
+    build: ./Storage
+    ports:
+      - "8090:8090"
+    depends_on:
+      - "receiver"
+    networks:
+      appnetwork:
+        ipv4_address: 172.30.0.9
+
+  processing:
+    build: ./Processing
+    ports:
+      - "8100:8100"
+    depends_on:
+      - "storage"
+    networks:
+      appnetwork:
+        ipv4_address: 172.30.0.8
+
+  # health:
+  #   build: ./health
+  #   ports:
+  #     - "8110:8110"
+  #   networks:
+  #     appnetwork:
+  #       ipv4_address: 172.30.0.7
 
   mysql:
-    container_name: mysql
+    build:
+      context: ./mysql
     image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: events
     volumes:
-      - data:/var/lib/mysql
-
-  receiver:
-    container_name: receiver
-    image: receiver:latest
-    depends_on:
-      - kafka
+      - mysql-data:/var/lib/mysql
     ports:
-      - 8080:8080
+      - "3306:3306"
+    networks:
+      appnetwork:
+        ipv4_address: 172.30.0.4
 
-  storage:
-    container_name: storage
-    image: storage:latest
-    depends_on:
-      - kafka
-      - mysql
-    ports:
-      - 8090:8090
-
-  
-  
+networks:
+  appnetwork:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.30.0.0/16
+          gateway: 172.30.0.1
 
 volumes:
-  data:
+  mysql-data:

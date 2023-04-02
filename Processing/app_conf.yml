@@ -1,5 +1,6 @@
 version: 1
 filename: stats.sqlite
 period: 5
-sell_url: http://localhost:8090/sell
-buy_url: http://localhost:8090/buy
+# sell_url: http://localhost:8090/sell
+sell_url: http://172.30.0.9:8090/sell
+buy_url: http://172.30.0.9:8090/buy

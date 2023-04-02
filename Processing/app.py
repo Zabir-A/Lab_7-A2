@@ -73,7 +73,7 @@ def populate_stats():
 
     # TODO call the /buy GET endpoint of storage, passing last_updated
     buy_response = requests.get(
-        f"http://localhost:8090/buy?timestamp={last_updated}", headers=headers
+        f"http://34.130.75.254/buy?timestamp={last_updated}", headers=headers
     )
     # TODO convert result to a json object, loop through and calculate max_buy_price of all recent records
     buy_response = buy_response.json()
@@ -87,7 +87,7 @@ def populate_stats():
         num_buys_total += items["item_price"]
 
     # TODO call the /sell GET endpoint of storage, passing last_updated
-    sell_response = requests.get(f"http://localhost:8090/sell?timestamp={last_updated}")
+    sell_response = requests.get(f"http://34.130.75.254/sell?timestamp={last_updated}")
 
     # TODO convert result to_2 a json object, loop through and calculate max_sell_price of all recent records
     sell_response = sell_response.json()
@@ -101,7 +101,9 @@ def populate_stats():
         num_sells_total += items["item_price"]
 
     # TODO write a new Stats record to stats.sqlite using timestamp and the statistics you just generated
-    stats = Stats(buy_price_total, num_buys_total, sell_price_total, num_sells_total, last_updated)
+    stats = Stats(
+        buy_price_total, num_buys_total, sell_price_total, num_sells_total, last_updated
+    )
 
     # TODO add, commit and optionally close the session
     session.add(stats)
@@ -118,7 +120,12 @@ def init_scheduler():
 
 
 app = connexion.FlaskApp(__name__, specification_dir="")
-app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
+app.add_api(
+    "openapi.yml",
+    base_path="/processing",
+    strict_validation=True,
+    validate_responses=True,
+)
 
 with open("app_conf.yml", "r") as f:
     app_config = yaml.safe_load(f.read())

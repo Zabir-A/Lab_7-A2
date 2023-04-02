@@ -25,8 +25,14 @@ from pykafka.common import OffsetType
 import threading
 from threading import Thread
 
+# with open("app_conf.yml", "r") as f:
+#     app_config = yaml.safe_load(f.read())
+
 with open("app_conf.yml", "r") as f:
     app_config = yaml.safe_load(f.read())
+
+with open("storage-app_conf.yml", "r") as f:
+    storage_app_config = yaml.safe_load(f.read())
 
 DB_ENGINE = create_engine(
     f"mysql+pymysql://{app_config['user']}:{app_config['password']}@{app_config['hostname']}:{app_config['port']}/{app_config['db']}"
@@ -38,11 +44,18 @@ DB_SESSION = sessionmaker(bind=DB_ENGINE)
 def process_messages():
     # TODO: create KafkaClient object assigning hostname and port from app_config to named parameter "hosts"
     # and store it in a variable named 'client'
-    client = KafkaClient(hosts=f"{conf['events']['hostname']}:{conf['events']['port']}")
+    # client = KafkaClient(hosts=f"{conf['events']['hostname']}:{conf['events']['port']}")
 
     # TODO: index into the client.topics array using topic from app_config
     # and store it in a variable named topic
-    topic = client.topics[conf["events"]["topic"]]
+    # topic = client.topics[conf["events"]["topic"]]
+    hosts = (
+        storage_app_config["events"]["hostname"]
+        + ":"
+        + str(storage_app_config["events"]["port"])
+    )
+    client = KafkaClient(hosts=hosts)
+    topic = client.topics[storage_app_config["events"]["topic"]]
 
     # Notes:
     #
@@ -197,14 +210,19 @@ def get_sells(timestamp):
 
 
 app = connexion.FlaskApp(__name__, specification_dir="")
-app.add_api("openapi.yaml", strict_validation=True, validate_responses=True)
+app.add_api(
+    "openapi.yaml",
+    base_path="/storage",
+    strict_validation=True,
+    validate_responses=True,
+)
 
 with open("log_conf.yml", "r") as f:
     log_config = yaml.safe_load(f.read())
     logging.config.dictConfig(log_config)
 
-with open("storage-app_conf.yml", "r") as f:
-    conf = yaml.safe_load(f.read())
+# with open("storage-app_conf.yml", "r") as f:
+#     conf = yaml.safe_load(f.read())
 
 
 logger = logging.getLogger("basic")

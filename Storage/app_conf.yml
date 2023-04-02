@@ -1,10 +1,18 @@
+# version: 1
+# user: 'root'
+# password: 'root'
+# hostname: 'mysql'
+# port: 3306
+# db: 'events'
+# events:
+#   hostname: kafka
+#   port: 9092
+#   topic: events
+
+
 version: 1
-user: 'root'
-password: 'root'
-hostname: 'mysql'
+user: "root"
+password: "root"
+hostname: "172.30.0.4"
 port: 3306
-db: 'events'
-events:
-  hostname: kafka
-  port: 9092
-  topic: events
+db: "events"

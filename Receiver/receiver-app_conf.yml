@@ -1,9 +1,14 @@
-version: 1
-buy: 
-  url: http://localhost:8090/buy
-sell:
-  url: http://localhost:8090/sell
+# version: 1
+# buy: 
+#   url: http://localhost:8090/buy
+# sell:
+#   url: http://localhost:8090/sell
+# events:
+#   hostname: kafka
+#   port: 9092
+#   topic: events
+
 events:
-  hostname: kafka
+  hostname: 172.30.0.6
   port: 9092
   topic: events
