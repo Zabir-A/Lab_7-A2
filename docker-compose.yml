@@ -29,7 +29,10 @@ services:
         ipv4_address: 172.30.0.5
 
   receiver:
-    build: ./receiver
+    build: 
+      context: ./Receiver
+    image: receiver-image
+    container_name: receiver-container
     ports:
       - "8080:8080"
     networks:
@@ -37,7 +40,10 @@ services:
         ipv4_address: 172.30.0.10
 
   storage:
-    build: ./storage
+    build:
+      context: ./Storage
+    image: storage-image
+    container_name: storage-container
     ports:
       - "8090:8090"
     depends_on:
@@ -47,7 +53,10 @@ services:
         ipv4_address: 172.30.0.9
 
   processing:
-    build: ./processing
+    build: 
+      context: ./Processing
+    image: processing-image
+    container_name: processing-container
     ports:
       - "8100:8100"
     depends_on:
